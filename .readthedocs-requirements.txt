@@ -1,0 +1,13 @@
+sphinx
+numpy
+sphinx-gallery
+numpydoc
+pandas
+loky
+tqdm
+distributed
+sphinx-copybutton
+furo
+torch
+tensorflow
+sphinx_design
