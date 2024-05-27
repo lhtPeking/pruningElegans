@@ -10,7 +10,7 @@ import torch.optim as optim
 from ncps.datasets.torch import AtariCloningDataset
 from ncps.torch import CfC
 
-# ConvBlock definitionhi
+# ConvBlock definition
 class ConvBlock(nn.Module):
     def __init__(self):
         super().__init__()
