@@ -17,9 +17,9 @@ import torch.nn as nn
 import numpy as np
 
 
-class Wiring(nn.Module):
+class WiringRevised(nn.Module):
     def __init__(self, units):
-        super(Wiring, self).__init__()
+        super(WiringRevised, self).__init__()
         self.units = units
         self.adjacency_matrix = nn.Parameter(torch.zeros([units, units], dtype=torch.float32))
         self.sensory_adjacency_matrix = nn.Parameter(torch.zeros([units, units], dtype=torch.float32))
@@ -121,7 +121,7 @@ class Wiring(nn.Module):
     @classmethod
     def from_config(cls, config):
         # There might be a cleaner solution but it will work
-        wiring = Wiring(config["units"])
+        wiring = WiringRevised(config["units"])
         wiring.adjacency_matrix = config["adjacency_matrix"]
         wiring.sensory_adjacency_matrix = config["sensory_adjacency_matrix"]
         wiring.input_dim = config["input_dim"]
@@ -290,7 +290,7 @@ class Wiring(nn.Module):
         return legend_patches
 
 
-class FullyConnected(Wiring):
+class FullyConnected(WiringRevised):
     def __init__(
         self, units, output_dim=None, erev_init_seed=1111, self_connections=True
     ):
@@ -315,7 +315,7 @@ class FullyConnected(Wiring):
                 self.add_sensory_synapse(src, dest, polarity)
 
 
-class Random(Wiring):
+class Random(WiringRevised):
     def __init__(self, units, output_dim=None, sparsity_level=0.0, random_seed=1111):
         super(Random, self).__init__(units)
         if output_dim is None:
@@ -362,7 +362,7 @@ class Random(Wiring):
             self.add_sensory_synapse(src, dest, polarity)
 
 
-class NCP(Wiring):
+class NCP(WiringRevised):
     def __init__(
         self,
         inter_neurons,

@@ -67,7 +67,7 @@ class CfC(nn.Module):
         self.batch_first = batch_first
         self.return_sequences = return_sequences
 
-        if isinstance(units, ncps.wirings.Wiring):
+        if isinstance(units, ncps.wirings.wirings.Wiring) or isinstance(units, ncps.wirings.wiringsRevised.WiringRevised):
             self.wired_mode = True
             if backbone_units is not None:
                 raise ValueError(f"Cannot use backbone_units in wired mode")
@@ -78,7 +78,10 @@ class CfC(nn.Module):
             # self.rnn_cell = WiredCfCCell(input_size, wiring_or_units)
             self.wiring = units
             self.state_size = self.wiring.units
-            self.output_size = self.wiring.output_dim
+            if (self.wiring.output_dim is not None):
+                self.output_size = self.wiring.output_dim
+            else:
+                self.output_size = self.state_size
             self.rnn_cell = WiredCfCCell(
                 input_size,
                 self.wiring_or_units,
@@ -107,6 +110,7 @@ class CfC(nn.Module):
         if proj_size is None:
             self.fc = nn.Identity()
         else:
+            print(self.output_size, self.proj_size)
             self.fc = nn.Linear(self.output_size, self.proj_size)
 
     def forward(self, input, hx=None, timespans=None):

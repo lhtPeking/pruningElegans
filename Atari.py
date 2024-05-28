@@ -9,6 +9,7 @@ from torch.utils.data import Dataset, DataLoader
 import torch.optim as optim
 from ncps.datasets.torch import AtariCloningDataset
 from ncps.torch import CfC
+from ncps.wirings.wiringsRevised import WiringRevised
 
 # ConvBlock definition
 class ConvBlock(nn.Module):
@@ -126,7 +127,10 @@ def run_closed_loop(model, env, num_episodes=None):
 
 # Device setup
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-wiring = Wiring(units=256)  # Example wiring
+wiring = WiringRevised(units=256)  # Example wiring
+# print(type(wiring))
+# wiring = wiring.adjacency_matrix.detach().numpy()
+# print(type(wiring))
 model = ConvCfC(n_actions=env.action_space.n, wiring=wiring).to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.0001)
