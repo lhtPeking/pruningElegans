@@ -136,12 +136,12 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.0001)
 
 # Training loop
-for epoch in range(50):  # loop over the dataset multiple times
+for epoch in range(5):  # loop over the dataset multiple times
     train_one_epoch(model, criterion, optimizer, trainloader)
     val_loss, val_acc = eval(model, valloader)
     print(f"Epoch {epoch+1}, val_loss={val_loss:0.4g}, val_acc={100*val_acc:0.2f}%")
-    returns = run_closed_loop(model, env, num_episodes=10)
-    print(f"Mean return {np.mean(returns)} (n={len(returns)})")
+    # returns = run_closed_loop(model, env, num_episodes=10)
+    # print(f"Mean return {np.mean(returns)} (n={len(returns)})")
 
 # Visualize Atari game and play endlessly
 env = gym.make("ALE/Breakout-v5", render_mode="human")
