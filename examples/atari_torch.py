@@ -153,12 +153,12 @@ if __name__ == "__main__":
     )
     valloader = torch.utils.data.DataLoader(val_ds, batch_size=32, num_workers=4)
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:1")
     model = ConvCfC(n_actions=env.action_space.n).to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.0001)
 
-    for epoch in range(50):  # loop over the dataset multiple times
+    for epoch in range(1):  # loop over the dataset multiple times
         train_one_epoch(model, criterion, optimizer, trainloader)
 
         # Evaluate model on the validation set
