@@ -1,0 +1,7 @@
+<class 'torch.Tensor'>
+256
+<class 'torch.Tensor'>
+256 4
+Epoch 1, val_loss=0.8023, val_acc=63.67%
+Epoch 2, val_loss=0.2249, val_acc=92.22%
+Epoch 3, val_loss=0.1888, val_acc=93.23%

@@ -71,14 +71,14 @@ class CfCCell(nn.Module):
             raise ValueError(
                 f"Unknown mode '{mode}', valid options are {str(allowed_modes)}"
             )
-        self.sparsity_mask = (
-            None
-            if sparsity_mask is None
-            else torch.nn.Parameter(
-                data=torch.from_numpy(np.abs(sparsity_mask.T).astype(np.float32)),
+        if sparsity_mask is None:
+            self.sparsity_mask = None
+        else:
+            sparsity_mask_np = sparsity_mask.cpu().detach().numpy()
+            self.sparsity_mask = torch.nn.Parameter(
+                data=torch.from_numpy(np.abs(sparsity_mask_np.T).astype(np.float32)),
                 requires_grad=False,
             )
-        )
 
         self.mode = mode
 

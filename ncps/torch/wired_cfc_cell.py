@@ -35,14 +35,21 @@ class WiredCfCCell(nn.Module):
                 prev_layer_neurons = self._wiring.get_neurons_of_layer(l - 1)
                 input_sparsity = self._wiring.adjacency_matrix[:, hidden_units]
                 input_sparsity = input_sparsity[prev_layer_neurons, :]
-            input_sparsity = np.concatenate(
-                [
-                    input_sparsity,
-                    np.ones((len(hidden_units), len(hidden_units))),
-                ],
-                axis=0,
-            )
-
+            # input_sparsity = np.concatenate(
+            #     [
+            #         input_sparsity,
+            #         np.ones((len(hidden_units), len(hidden_units))),
+            #     ],
+            #     axis=0,
+            # )
+            print(type(input_sparsity))
+            hidden_units_num = torch.tensor(hidden_units).detach().numpy()
+            ones_matrix = np.ones((len(hidden_units_num), len(hidden_units_num)))
+            print(len(ones_matrix))
+            input_sparsity_num = torch.tensor(input_sparsity).clone().detach().numpy()
+            conc_input_sparsity = np.concatenate([input_sparsity_num, ones_matrix], axis=0)
+            final_input_sparsity = torch.tensor(conc_input_sparsity)
+            print(type(final_input_sparsity))
             # Hack: nn.Module registers child params in set_attribute
             rnn_cell = CfCCell(
                 in_features,
@@ -52,7 +59,7 @@ class WiredCfCCell(nn.Module):
                 backbone_units=0,
                 backbone_layers=0,
                 backbone_dropout=0.0,
-                sparsity_mask=input_sparsity,
+                sparsity_mask=final_input_sparsity,
             )
             self.register_module(f"layer_{l}", rnn_cell)
             self._layers.append(rnn_cell)
