@@ -15,9 +15,11 @@
 Traditional **Neural Circuit Policies (NCPs)** are designed sparse recurrent neural networks loosely inspired by the nervous system of the organism [**C. elegans**](http://www.wormbook.org/chapters/www_celegansintro/celegansintro.html). 
 
 In the traditional **RNN** model, the hidden layer state transition could be represented as:
-$$
-\pmb{X}_{t+1}=\pmb{X}_t+f(\pmb{X}_t, \pmb{\theta})
-$$
+
+\begin{center}
+$\pmb{X}_{t+1}=\pmb{X}_t+f(\pmb{X}_t, \pmb{\theta})$
+\end{center}
+
 Where $\pmb{X}$ represents hidden layer state, $\pmb{\theta}$ represents model's parameters.
 
 We can continuous the discretized state transitions, then we have the **Neural Ordinary Differential Equation (ODE)**:
