@@ -53,9 +53,9 @@ Where $\tau_{system}=\frac{\tau}{1+\tau f(\pmb{X}(t),\pmb{I}(t),t,\pmb{\theta})}
 </n>
 In a NCP, every unit (every neuron) is actually a LTC model, so any neuron possesses time-series processing ability (derived from RNN), and the formula for Neuron $i$ is transformed to:
 
-$\frac{d\pmb{X}_i(t)}{dt}=-[\frac{1}{\tau_{system_i}}+\sum_{j}\frac{w_{ij}}{C_{m_i}}\sigma_i(\pmb{X}_j)]\pmb{X}_i(t)+\sum_{j}\frac{w_{ij}}{C_{m_i}}\sigma_i(\pmb{X}_j){E}_{ij}+\frac{\pmb{X}_{leak_i}}{\tau_i}$
+$\frac{d\pmb{X}_i(t)}{dt}=-[\frac{1}{\tau_{system_i}}+\sum_{j}\frac{w_{ij}}{C_{m_i}}\sigma_i(\pmb{X}_j)]\pmb{X}_i(t)+\sum_{j}\frac{w_{ij}}{C_{m_i}}\sigma_i(\pmb{X}_j)E_{ij}+\frac{\pmb{X}_{leak_i}}{\tau_i}$
 
-Where $w_{ij}$ represents connection weight between neuron $i$ and neuron $j$.  $C_{m_i}$ represents the membrane capacitance of Neuron $i$. $\sigma_i(\pmb{X}_j)$ represents the input from neuron $j$ to neuron $i$, and $\sigma_i$ is the activate function. ${E}_{ij}$ is the polarity of the connection (${E}_{ij}\in\{1,-1\}$)
+Where $w_{ij}$ represents connection weight between neuron $i$ and neuron $j$.  $C_{m_i}$ represents the membrane capacitance of Neuron $i$. $\sigma_i(\pmb{X}_j)$ represents the input from neuron $j$ to neuron $i$, and $\sigma_i$ is the activate function. $E_{ij}$ is the polarity of the connection ($E_{ij}\in\{1,-1\}$)
 </n>
 </n>
 Based on the LTC single neuron, the original algorithm in [Nature Article](https://publik.tuwien.ac.at/files/publik_292280.pdf) defined a wiring system:
@@ -66,9 +66,9 @@ Based on the LTC single neuron, the original algorithm in [Nature Article](https
 </n>
 (2) Between every two consecutive layers: $\forall$ source neuron, insert $n_{so−t}$ synapses ($n_{so−t}\le{N_t}$), with synaptic polarity $E_{ij}$ ~ $Bernoulli(p_2)$, to $n_{so−t}$ target neurons, randomly selected ~ $Binomial(n_{so−t}, p_1)$. $n_{so−t}$ is the number of synapses from source to target. $p_1$ and $p_2$ are probabilities corresponding to their distributions.
 </n>
-(3) Between every two consecutive layers: $\forall$ target neuron $j$ with no synapse, insert $m_{so-t}$ synapses ($m_{so-t}\le{\frac{1}{N_t}\sum_{i\neq{j}}}L_{t_i}$, which means the newly insert number is below average), where $L_{t_i}$ is the number of synapses to target neuron $i$, with synaptic polarity ${E}_{ij}$ ~ ${Bernoulli(p_2)}$, from $m_{so-t}$ source neurons, randomly selected from ~ ${Binomial(m_{so−t}, p_3)}$. $m_{so−t}$ is the number of synapses from source to target neurons with no synaptic connections.
+(3) Between every two consecutive layers: $\forall$ target neuron $j$ with no synapse, insert $m_{so-t}$ synapses ($m_{so-t}\le{\frac{1}{N_t}\sum_{i\neq{j}}}L_{t_i}$, which means the newly insert number is below average), where $L_{t_i}$ is the number of synapses to target neuron $i$, with synaptic polarity $E_{ij}$ ~ $Bernoulli(p_2)$, from $m_{so-t}$ source neurons, randomly selected from ~ $Binomial(m_{so−t}, p_3)$. $m_{so−t}$ is the number of synapses from source to target neurons with no synaptic connections.
 </n>
-(4) Recurrent connections of command neurons: $\forall$ command neuron, insert $l_{so−t}$ synapses ($l_{so−t}\le{N_t}$), with synaptic polarity ${E}_{ij}$ ~ ${ Bernoulli(p_2)}$, to $l_{so−t}$ target command neurons, randomly selected from ~ $Binomial(l_{so−t}, p_4)$ . $l_{so−t}$ is the number of synapses from one interneuron to target neurons.
+(4) Recurrent connections of command neurons: $\forall$ command neuron, insert $l_{so−t}$ synapses ($l_{so−t}\le{N_t}$), with synaptic polarity $E_{ij}$ ~ $Bernoulli(p_2)$, to $l_{so−t}$ target command neurons, randomly selected from ~ $Binomial(l_{so−t}, p_4)$ . $l_{so−t}$ is the number of synapses from one interneuron to target neurons.
 </n>
 </n>
 From the original wiring system we can see that: once the wiring strategy is set up at the very beginning, it won't change during the training process. But it is obvious that the wiring structure won't be optimal through such a stochastic wiring process. This drawback was ignored in the original algorithm.
