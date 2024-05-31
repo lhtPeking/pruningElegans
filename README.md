@@ -64,9 +64,12 @@ Based on the LTC single neuron, the original algorithm in [Nature Article](https
 
 (1) Insert four neural layers: sensory neurons $N_s$, inter-neurons $N_i$, command neurons $N_c$ and motor neurons $N_m$
 </n>
+</n>
 (2) Between every two consecutive layers: $\forall$ source neuron, insert $n_{so−t}$ synapses ($n_{so−t}\le{N_t}$), with synaptic polarity $E_{ij}$ ~ $Bernoulli(p_2)$, to $n_{so−t}$ target neurons, randomly selected ~ $Binomial(n_{so−t}, p_1)$. $n_{so−t}$ is the number of synapses from source to target. $p_1$ and $p_2$ are probabilities corresponding to their distributions.
 </n>
+</n>
 (3) Between every two consecutive layers: $\forall$ target neuron $j$ with no synapse, insert $m_{so-t}$ synapses ($m_{so-t}\le{\frac{1}{N_t}\sum_{i\neq{j}}}L_{t_i}$, which means the newly insert number is below average), where $L_{t_i}$ is the number of synapses to target neuron $i$, with synaptic polarity $E_{ij}$ ~ $Bernoulli(p_2)$, from $m_{so-t}$ source neurons, randomly selected from ~ $Binomial(m_{so−t}, p_3)$. $m_{so−t}$ is the number of synapses from source to target neurons with no synaptic connections.
+</n>
 </n>
 (4) Recurrent connections of command neurons: $\forall$ command neuron, insert $l_{so−t}$ synapses ($l_{so−t}\le{N_t}$), with synaptic polarity $E_{ij}$ ~ $Bernoulli(p_2)$, to $l_{so−t}$ target command neurons, randomly selected from ~ $Binomial(l_{so−t}, p_4)$ . $l_{so−t}$ is the number of synapses from one interneuron to target neurons.
 </n>
