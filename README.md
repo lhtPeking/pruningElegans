@@ -18,7 +18,7 @@ Traditional **Neural Circuit Policies (NCPs)** are designed sparse recurrent neu
 In the traditional **RNN** model, the hidden layer state transition could be represented as:
 
 
-<div  align="center"><img  src="https://github.com/lhtPeking/pruningElegans/blob/main/imgs/Formula1.png?raw=true"  width="800"/></div>
+<div  align="center"><img  src="https://github.com/lhtPeking/pruningElegans/blob/main/imgs/Formula1.png?raw=true"  width="250"/></div>
 
 
 Where $\pmb{X}$ represents hidden layer state, $\pmb{\theta}$ represents model's parameters.
@@ -26,17 +26,17 @@ Where $\pmb{X}$ represents hidden layer state, $\pmb{\theta}$ represents model's
 </n>
 We can continuous the discretized state transitions, then we have the **Neural Ordinary Differential Equation (ODE)**:
 
-<div  align="center"><img  src="https://github.com/lhtPeking/pruningElegans/blob/main/imgs/Formula2.png?raw=true"  width="800"/></div>
+<div  align="center"><img  src="https://github.com/lhtPeking/pruningElegans/blob/main/imgs/Formula2.png?raw=true"  width="300"/></div>
 
 
 Where $\pmb{I}(t)$ represents the input matrix at time point $t$.
 </n>
 </n>
 Then introduce **time constant** $\tau$ to describe the speed at which the model converges to equilibrium, get the **Continuous-Time RNN (CT-RNN)**:
-<div  align="center"><img  src="https://github.com/lhtPeking/pruningElegans/blob/main/imgs/Formula3.png?raw=true"  width="800"/></div>
+<div  align="center"><img  src="https://github.com/lhtPeking/pruningElegans/blob/main/imgs/Formula3.png?raw=true"  width="400"/></div>
 
 And $\tau$ does not affect the equilibrium state:
-<div  align="center"><img  src="https://github.com/lhtPeking/pruningElegans/blob/main/imgs/Formula4.png?raw=true"  width="800"/></div>
+<div  align="center"><img  src="https://github.com/lhtPeking/pruningElegans/blob/main/imgs/Formula4.png?raw=true"  width="250"/></div>
 
 
 </n>
