@@ -18,7 +18,7 @@ Traditional **Neural Circuit Policies (NCPs)** are designed sparse recurrent neu
 In the traditional **RNN** model, the hidden layer state transition could be represented as:
 
 
-$\pmb{X}_{t+1}=\pmb{X}_t+f(\pmb{X}_t, \pmb{\theta})$
+<div  align="center"><img  src="https://github.com/lhtPeking/pruningElegans/blob/main/imgs/Formula1.png?raw=true"  width="800"/></div>
 
 
 Where $\pmb{X}$ represents hidden layer state, $\pmb{\theta}$ represents model's parameters.
@@ -26,27 +26,29 @@ Where $\pmb{X}$ represents hidden layer state, $\pmb{\theta}$ represents model's
 </n>
 We can continuous the discretized state transitions, then we have the **Neural Ordinary Differential Equation (ODE)**:
 
-$\frac{d\pmb{X}(t)}{dt}=f(\pmb{X}(t),\pmb{I}(t),t,\pmb{\theta})$
+<div  align="center"><img  src="https://github.com/lhtPeking/pruningElegans/blob/main/imgs/Formula2.png?raw=true"  width="800"/></div>
+
 
 Where $\pmb{I}(t)$ represents the input matrix at time point $t$.
 </n>
 </n>
 Then introduce **time constant** $\tau$ to describe the speed at which the model converges to equilibrium, get the **Continuous-Time RNN (CT-RNN)**:
-
-$\tau\frac{d\pmb{X}(t)}{dt}=-\pmb{X}(t)+f(\pmb{X}(t),\pmb{I}(t),t,\pmb{\theta})$
+<div  align="center"><img  src="https://github.com/lhtPeking/pruningElegans/blob/main/imgs/Formula3.png?raw=true"  width="800"/></div>
 
 And $\tau$ does not affect the equilibrium state:
+<div  align="center"><img  src="https://github.com/lhtPeking/pruningElegans/blob/main/imgs/Formula4.png?raw=true"  width="800"/></div>
 
-$\pmb{X}(t)=f(\pmb{X}(t),\pmb{I}(t),t,\pmb{\theta})$
+
 </n>
 </n>
 Finally we introduce a correction term $\pmb{A}-\pmb{X}(t)$ for the convergence speed, making the convergence speed inversely proportional to the distance between the model itself and the expected state:
+<div  align="center"><img  src="https://github.com/lhtPeking/pruningElegans/blob/main/imgs/Formula5.png?raw=true"  width="800"/></div>
 
-$\frac{d\pmb{X}(t)}{dt}=-\frac{\pmb{X}(t)}{\tau}+f(\pmb{X}(t),\pmb{I}(t),t,\pmb{\theta})(\pmb{A}-\pmb{X}(t))$
 
 Simplifying the equation structure, yields:
+<div  align="center"><img  src="https://github.com/lhtPeking/pruningElegans/blob/main/imgs/Formula6.png?raw=true"  width="800"/></div>
 
-$\frac{d\pmb{X}(t)}{dt}=-\frac{1}{\tau_{system}}\pmb{X}(t)+\pmb{A}f(\pmb{X}(t),\pmb{I}(t),t,\pmb{\theta})$
+
 
 Where $\tau_{system}=\frac{\tau}{1+\tau f(\pmb{X}(t),\pmb{I}(t),t,\pmb{\theta})}$, and this model is called **Liquid Time Constant (LTC)** model.
 </n>
