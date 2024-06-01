@@ -53,7 +53,8 @@ Where $\tau_{system}=\frac{\tau}{1+\tau f(\pmb{X}(t),\pmb{I}(t),t,\pmb{\theta})}
 </n>
 In a NCP, every unit (every neuron) is actually a LTC model, so any neuron possesses time-series processing ability (derived from RNN), and the formula for Neuron $i$ is transformed to:
 
-$\frac{d\pmb{X}_i(t)}{dt}=-[\frac{1}{\tau_{system_i}}+\sum_{j}\frac{w_{ij}}{C_{m_i}}\sigma_i(\pmb{X}_j)]\pmb{X}_i(t)+\sum_{j}\frac{w_{ij}}{C_{m_i}}\sigma_i(\pmb{X}_j)E_{ij}+\frac{\pmb{X}_{leak_i}}{\tau_i}$
+<div  align="center"><img  src="https://github.com/lhtPeking/pruningElegans/blob/main/imgs/Formula.png?raw=true"  width="800"/></div>
+
 
 Where $w_{ij}$ represents connection weight between neuron $i$ and neuron $j$.  $C_{m_i}$ represents the membrane capacitance of Neuron $i$. $\sigma_i(\pmb{X}_j)$ represents the input from neuron $j$ to neuron $i$, and $\sigma_i$ is the activate function. $E_{ij}$ is the polarity of the connection ($E_{ij}\in\{1,-1\}$)
 </n>
