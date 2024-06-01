@@ -42,11 +42,11 @@ And $\tau$ does not affect the equilibrium state:
 </n>
 </n>
 Finally we introduce a correction term $\pmb{A}-\pmb{X}(t)$ for the convergence speed, making the convergence speed inversely proportional to the distance between the model itself and the expected state:
-<div  align="center"><img  src="https://github.com/lhtPeking/pruningElegans/blob/main/imgs/Formula5.png?raw=true"  width="800"/></div>
+<div  align="center"><img  src="https://github.com/lhtPeking/pruningElegans/blob/main/imgs/Formula5.png?raw=true"  width="500"/></div>
 
 
 Simplifying the equation structure, yields:
-<div  align="center"><img  src="https://github.com/lhtPeking/pruningElegans/blob/main/imgs/Formula6.png?raw=true"  width="800"/></div>
+<div  align="center"><img  src="https://github.com/lhtPeking/pruningElegans/blob/main/imgs/Formula6.png?raw=true"  width="500"/></div>
 
 
 
