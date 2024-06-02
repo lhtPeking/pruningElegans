@@ -1,17 +1,3 @@
-# Copyright 2020-2021 Mathias Lechner
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import torch
 import torch.nn as nn
 import numpy as np
@@ -21,23 +7,23 @@ class WiringRevised(nn.Module):
     def __init__(self, units):
         super(WiringRevised, self).__init__()
         self.units = units
-        self.adjacency_matrix = nn.Parameter(torch.zeros([units, units], dtype=torch.float32))
-        self.sensory_adjacency_matrix = nn.Parameter(torch.zeros([units, units], dtype=torch.float32))
-        self.input_dim = None
-        self.output_dim = None
+        self.adjacency_matrix = nn.Parameter(torch.zeros([units, units], dtype=torch.float32)) # 初始化邻接矩阵并使其可学习
+        self.sensory_adjacency_matrix = nn.Parameter(torch.zeros([units, units], dtype=torch.float32)) # 初始化感觉神经元邻接矩阵并使其可学习
+        self.input_dim = None # 输入维度
+        self.output_dim = None # 输出维度
 
     @property
-    def num_layers(self):
+    def num_layers(self): # 网络层数
         return 1
 
-    def get_neurons_of_layer(self, layer_id):
+    def get_neurons_of_layer(self, layer_id): # 返回指定层的神经元索引
         return list(range(self.units))
 
-    def is_built(self):
+    def is_built(self): # 检查模型是否已经建立
         return self.input_dim is not None
 
     def build(self, input_dim):
-        if not self.input_dim is None and self.input_dim != input_dim:
+        if not self.input_dim is None and self.input_dim != input_dim: # 输入维度与设定维度不匹配
             raise ValueError(
                 "Conflicting input dimensions provided. set_input_dim() was called with {} but actual input has dimension {}".format(
                     self.input_dim, input_dim
@@ -47,10 +33,14 @@ class WiringRevised(nn.Module):
             self.set_input_dim(input_dim)
 
     def erev_initializer(self, shape=None, dtype=None):
-        return torch.rand((self.units, self.units), dtype=torch.float32) * 2 - 1
+        return torch.rand((self.units, self.units), dtype=torch.float32) * 2 - 1 
+        # 初始化邻接矩阵:用(-1,1)之间的随机小数对邻接矩阵进行填充,正负代表极性，绝对值代表权重
+        # dimension:units*units
 
     def sensory_erev_initializer(self, shape=None, dtype=None):
         return torch.rand((self.input_dim, self.units), dtype=torch.float32) * 2 - 1
+        # 初始化感觉神经元邻接矩阵:用(-1,1)之间的随机小数对邻接矩阵进行填充,正负代表极性，绝对值代表权重
+        # dimension:input_dim*units
 
     def set_input_dim(self, input_dim):
         self.input_dim = input_dim
@@ -60,10 +50,10 @@ class WiringRevised(nn.Module):
         self.output_dim = output_dim
 
     # May be overwritten by child class
-    def get_type_of_neuron(self, neuron_id):
+    def get_type_of_neuron(self, neuron_id): # 获得神经元类型
         return "motor" if neuron_id < self.output_dim else "inter"
 
-    def add_synapse(self, src, dest, polarity):
+    def add_synapse(self, src, dest, polarity): # 建立层与层之间的突触连接
         if src < 0 or src >= self.units:
             raise ValueError(
                 "Cannot add synapse originating in {} if cell has only {} units".format(
@@ -84,7 +74,7 @@ class WiringRevised(nn.Module):
             )
         self.adjacency_matrix.data[src, dest] = polarity
 
-    def add_sensory_synapse(self, src, dest, polarity):
+    def add_sensory_synapse(self, src, dest, polarity): # 建立感觉神经元与第一层之间的突触连接(breakout任务中是卷积神经网络与LTC Neuron的连接)
         if self.input_dim is None:
             raise ValueError(
                 "Cannot add sensory synapses before build() has been called!"
@@ -129,7 +119,7 @@ class WiringRevised(nn.Module):
 
         return wiring
 
-    def get_graph(self, include_sensory_neurons=True):
+    def get_graph(self, include_sensory_neurons=True): # 生成NCP神经元连接有向图
         """
         Returns a networkx.DiGraph object of the wiring diagram
         :param include_sensory_neurons: Whether to include the sensory neurons as nodes in the graph
@@ -177,16 +167,16 @@ class WiringRevised(nn.Module):
         return DG
 
     @property
-    def synapse_count(self):
+    def synapse_count(self): # 计算内部神经元与内部神经元之间的突触数量
         """Counts the number of synapses between internal neurons of the model"""
         return np.sum(np.abs(self.adjacency_matrix))
 
     @property
-    def sensory_synapse_count(self):
+    def sensory_synapse_count(self): # 计算感觉神经元与内部神经元之间的突触数量
         """Counts the number of synapses from the inputs (sensory neurons) to the internal neurons of the model"""
         return np.sum(np.abs(self.sensory_adjacency_matrix))
 
-    def draw_graph(
+    def draw_graph( # NCP神经元连接图可视化
         self,
         layout="shell",
         neuron_colors=None,
@@ -290,9 +280,10 @@ class WiringRevised(nn.Module):
         return legend_patches
 
 
-class FullyConnected(WiringRevised):
+class FullyConnected(WiringRevised): # 全连接NCP的定义(区分于sparse connection)
     def __init__(
         self, units, output_dim=None, erev_init_seed=1111, self_connections=True
+        # 设定随机数种子(用于初始化原算法中没有定义的离散化的两个矩阵),同时允许自己与自己连接
     ):
         super(FullyConnected, self).__init__(units)
         if output_dim is None:
@@ -300,22 +291,24 @@ class FullyConnected(WiringRevised):
         self.self_connections = self_connections
         self.set_output_dim(output_dim)
         self._rng = np.random.default_rng(erev_init_seed)
-        for src in range(self.units):
+        for src in range(self.units): # 随机初始化
             for dest in range(self.units):
                 if src == dest and not self_connections:
                     continue
-                polarity = self._rng.uniform(low=-1.0, high=1.0)
+                polarity = self._rng.uniform(low=-1.0, high=1.0) 
+                # polarity包括权重(polarity的正负是原算法中的polarity,polarity的绝对值大小是weight)
                 self.add_synapse(src, dest, polarity)
 
     def build(self, input_shape):
         super().build(input_shape)
-        for src in range(self.input_dim):
+        for src in range(self.input_dim): # 感觉神经元邻接矩阵的随机初始化
             for dest in range(self.units):
                 polarity = self._rng.uniform(low=-1.0, high=1.0)
                 self.add_sensory_synapse(src, dest, polarity)
 
 
-class Random(WiringRevised):
+class Random(WiringRevised): # 不是全连接，但也不具有任何连接策略的完全随机连接方法
+    # 与原算法类似的随机建立初始连接组Random类,根据给定的sparse level生成连接
     def __init__(self, units, output_dim=None, sparsity_level=0.0, random_seed=1111):
         super(Random, self).__init__(units)
         if output_dim is None:
@@ -323,7 +316,7 @@ class Random(WiringRevised):
         self.set_output_dim(output_dim)
         self.sparsity_level = sparsity_level
 
-        if sparsity_level < 0.0 or sparsity_level >= 1.0:
+        if sparsity_level < 0.0 or sparsity_level >= 1.0: # sparse level应当位于0~1之前
             raise ValueError(
                 "Invalid sparsity level '{}', expected value in range [0,1)".format(
                     sparsity_level
@@ -374,7 +367,8 @@ class NCP(WiringRevised):
         motor_fanin,
         seed=22222,
 
-        weight_threshold=0.1,
+        weight_threshold=0.1, 
+        # 小于weight_threshold的edge被cut off,这里设定为0.1,但实际情况可能更小,可能fine-tuning之后会有更好的效果
     ):
         """
         Creates a Neural Circuit Policies wiring.
@@ -461,25 +455,25 @@ class NCP(WiringRevised):
             return "command"
         return "inter"
 
-    def _pruning_and_rewiring(self, adj_matrix, num_neurons, next_layer_neurons):
+    def _pruning_and_rewiring(self, adj_matrix, num_neurons, next_layer_neurons): # 关键的修改处
         """
         :param adj_matrix: 突触连接矩阵
         :param num_neurons: 当前层的神经元数量
         :param next_layer_neurons: 下一层的神经元列表
         """
-        for src in range(num_neurons):
+        for src in range(num_neurons): # 遍历所有LTC神经元
             for dest in range(len(next_layer_neurons)):
-                if np.abs(adj_matrix[src, dest]) < self._weight_threshold:
+                if np.abs(adj_matrix[src, dest]) < self._weight_threshold: # 遍历每个神经元的每一个出度边权值
                     adj_matrix[src, dest] = 0 # pruning
-                    new_dest = self._rng.choice([n for n in next_layer_neurons if n != dest])
+                    new_dest = self._rng.choice([n for n in next_layer_neurons if n != dest]) # 生成新的连接边(但不连接到原来的神经元)
                     adj_matrix[src, new_dest] = self._rng.uniform(low=-1.0, high=1.0)
 
-        for dest in range(len(next_layer_neurons)):
+        for dest in range(len(next_layer_neurons)): # 遍历每一个next_layer神经元(保证没有神经元入度为0,从而防止模型退化)
             if np.sum(np.abs(adj_matrix[:, dest])) == 0:
                 src = self._rng.choice(range(num_neurons))
                 adj_matrix[src, dest] = self._rng.uniform(low=-1.0, high=1.0)
 
-    def _build_sensory_to_inter_layer(self):
+    def _build_sensory_to_inter_layer(self): # 原文中的连接算法
         unreachable_inter_neurons = [l for l in self._inter_neurons]
         # Randomly connects each sensory neuron to exactly _sensory_fanout number of interneurons
         for src in self._sensory_neurons:
@@ -585,7 +579,7 @@ class NCP(WiringRevised):
         self._build_command__to_motor_layer()
 
 
-class AutoNCP(NCP):
+class AutoNCP(NCP): # 实现简易的NCP自动连接(继承自NCP)
     def __init__(
         self,
         units,
