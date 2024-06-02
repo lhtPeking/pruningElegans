@@ -374,7 +374,7 @@ class NCP(WiringRevised):
         motor_fanin,
         seed=22222,
 
-        weight_threshold=0.1,
+        weight_threshold=0.001,
     ):
         """
         Creates a Neural Circuit Policies wiring.
