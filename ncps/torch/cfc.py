@@ -43,7 +43,7 @@ class CfC(nn.Module):
         self.batch_first = batch_first
         self.return_sequences = return_sequences
 
-        if isinstance(units, ncps.wirings.Wiring) or isinstance(units, ncps.wirings.wiringsRevised.WiringRevised):
+        if isinstance(units, ncps.wirings.Wiring):
             self.wired_mode = True
             if backbone_units is not None:
                 raise ValueError(f"Cannot use backbone_units in wired mode")
