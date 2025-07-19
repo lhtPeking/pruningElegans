@@ -18,6 +18,7 @@ Traditional **Neural Circuit Policies (NCPs)** are designed sparse recurrent neu
 In the traditional **RNN** model, the hidden layer state transition could be represented as:
 
 
+
 <div  align="center"><img  src="https://github.com/lhtPeking/pruningElegans/blob/main/imgs/Formula1.png?raw=true"  width="250"/></div>
 
 
